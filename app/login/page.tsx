@@ -1,18 +1,57 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import type { ApiValidationError, FieldErrors } from "@/types/login";
 
 export default function LoginPage() {
-  const [identifier, setIdentifier] = useState("");
-  const [senha, setSenha] = useState("");
+  const router = useRouter();
 
-  function handleSubmit(e: React.FormEvent) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [formError, setFormError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // integração com a API Laravel (Sanctum) entra aqui depois
-    console.log({ identifier, senha });
+    setLoading(true);
+    setFieldErrors({});
+    setFormError("");
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        const err = (data ?? {}) as ApiValidationError;
+        const errors = err.errors ?? {};
+        setFieldErrors({
+          email: errors.email?.[0],
+          password: errors.password?.[0],
+        });
+        // Mensagem geral só quando não há erro amarrado a um campo.
+        if (!errors.email && !errors.password) {
+          setFormError(err.message ?? "Não foi possível entrar.");
+        }
+        return;
+      }
+
+      router.replace("/dashboard");
+      router.refresh();
+    } catch {
+      setFormError("Falha de conexão. Tente novamente.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -40,31 +79,43 @@ export default function LoginPage() {
         </div>
 
         <span className="mb-6 block text-center text-sm font-medium text-dark/70">
-            Sistema de Controle Financeiro
+          Sistema de Controle Financeiro
         </span>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
           <Input
-            id="identifier"
+            id="email"
             label=""
-            type="text"
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="seu email"
+            autoComplete="email"
+            error={fieldErrors.email}
             required
           />
 
           <Input
-            id="senha"
+            id="password"
             label=""
             type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="••••••••••••"
+            autoComplete="current-password"
+            error={fieldErrors.password}
             required
           />
 
-          <Button type="submit" className="mt-2">Acessar</Button>
+          {formError && (
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-xs font-medium text-red-600">
+              {formError}
+            </p>
+          )}
+
+          <Button type="submit" className="mt-2" disabled={loading}>
+            {loading ? "Entrando..." : "Acessar"}
+          </Button>
         </form>
       </div>
     </div>
