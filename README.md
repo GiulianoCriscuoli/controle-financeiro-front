@@ -25,12 +25,12 @@ Consome a API Laravel (Sanctum). O token de autenticação nunca é exposto ao J
 2. Crie o arquivo `.env.local` na raiz (há um `.env.example` de referência):
 
    ```env
-   # URL base da API (backend Laravel). Os endpoints partem daqui.
-   API_BASE_URL=http://localhost:8093
+   # URL base da API (backend Laravel). Os endpoints partem daqui — inclui o /api.
+   API_BASE_URL=http://localhost:8093/api
    ```
 
    - `API_BASE_URL` é usada **apenas no servidor** (route handlers e Server Components). Não tem prefixo `NEXT_PUBLIC_`, portanto não vaza para o navegador.
-   - As rotas do backend são montadas como `${API_BASE_URL}/api/...` (ex.: `http://localhost:8093/api/login`).
+   - Já inclui o prefixo `/api`. As rotas do backend são montadas como `${API_BASE_URL}/...` (ex.: `http://localhost:8093/api/login`).
 
 ---
 

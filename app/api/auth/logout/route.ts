@@ -9,7 +9,7 @@ export async function POST() {
   // Avisa o backend para revogar o token (best-effort).
   if (token) {
     try {
-      await fetch(`${API_BASE_URL}/api/logout`, {
+      await fetch(`${API_BASE_URL}/logout`, {
         method: "POST",
         headers: {
           Accept: "application/json",

@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   let apiRes: Response;
 
   try {
-    apiRes = await fetch(`${API_BASE_URL}/api/login`, {
+    apiRes = await fetch(`${API_BASE_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

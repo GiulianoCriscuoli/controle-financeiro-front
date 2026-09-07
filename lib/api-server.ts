@@ -20,7 +20,7 @@ export async function apiFetch(
 ): Promise<Response> {
   const token = (await cookies()).get(AUTH_COOKIE)?.value;
 
-  return fetch(`${API_BASE_URL}/api${path}`, {
+  return fetch(`${API_BASE_URL}${path}`, {
     ...init,
     headers: {
       Accept: "application/json",
