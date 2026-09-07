@@ -38,7 +38,8 @@ export default function LoginPage() {
           email: errors.email?.[0],
           password: errors.password?.[0],
         });
-        // Mensagem geral só quando não há erro amarrado a um campo.
+      
+        
         if (!errors.email && !errors.password) {
           setFormError(err.message ?? "Não foi possível entrar.");
         }
