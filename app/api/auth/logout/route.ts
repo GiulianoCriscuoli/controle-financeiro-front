@@ -17,9 +17,7 @@ export async function POST() {
         },
         cache: "no-store",
       });
-    } catch {
-      // Ignora falha de rede: o cookie local é limpo de qualquer forma.
-    }
+    } catch {}
   }
 
   const res = NextResponse.json({ message: "Logout realizado." });
