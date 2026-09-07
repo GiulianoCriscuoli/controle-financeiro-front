@@ -36,26 +36,12 @@ Consome a API Laravel (Sanctum). O token de autenticação nunca é exposto ao J
 
 ## Rodando
 
-### Desenvolvimento
-
 ```bash
+npm install
 npm run dev
 ```
 
 App em **http://localhost:3000**. A raiz `/` redireciona para `/login`.
-
-### Build de produção
-
-```bash
-npm run build
-npm run start
-```
-
-### Lint
-
-```bash
-npm run lint
-```
 
 ---
 
